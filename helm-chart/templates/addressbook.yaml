@@ -1,0 +1,42 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: {{ .Values.addressbook.name }}-deployment
+  labels:
+    app: {{ .Values.addressbook.name }}-label-deployment
+spec:
+  replicas: {{ .Values.addressbook.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Values.addressbook.name }}-selector
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.addressbook.name }}-selector
+    spec:
+      securityContext:
+        {{- toYaml .Values.addressbook.securityContext | nindent 8 }}
+      containers:
+        - name: {{ .Values.addressbook.name }}-cont
+          image: {{ .Values.addressbook.image }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.addressbook.port }}
+          volumeMounts:
+            - name: {{ .Values.addressbook.name }}-config-volume
+              mountPath: {{ .Values.addressbook.mountPath }}
+          envFrom:
+            - configMapRef:
+                name: {{ .Values.database.name }}-config
+            - secretRef:
+                name: {{ .Values.database.name }}-secret
+          resources:
+            {{- toYaml .Values.addressbook.resources | nindent 12 }}
+          livenessProbe:
+            {{- toYaml .Values.addressbook.livenessProbe | nindent 12 }}
+          readinessProbe:
+            {{- toYaml .Values.addressbook.readinessProbe | nindent 12 }}
+      volumes:
+        - name: {{ .Values.addressbook.name }}-config-volume
+          configMap:
+            name: {{ .Values.addressbook.name }}-config

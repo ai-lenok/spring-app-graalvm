@@ -1,0 +1,37 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: {{ .Values.database.name }}-config
+data:
+  POSTGRESQL_USERNAME: {{ .Values.database.username }}
+  POSTGRESQL_DATABASE: {{ .Values.database.database_name }}
+---
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: {{ .Values.addressbook.name }}-config
+data:
+  application.yaml: |
+    spring:
+      r2dbc:
+        url: r2dbc:postgres://{{ .Values.database.name }}.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.database.port }}/{{ .Values.database.database_name }}
+        username: {{ .Values.database.username }}
+        password: ${POSTGRESQL_PASSWORD}
+      jpa:
+        database-platform: org.hibernate.dialect.PostgreSQL95Dialect
+---
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: {{ .Values.database.name }}-init-config
+data:
+  init-db.sql: |
+    DROP TABLE IF EXISTS ADDRESS_BOOK;
+    CREATE TABLE ADDRESS_BOOK
+    (
+        ID         BIGSERIAL PRIMARY KEY,
+        FIRST_NAME VARCHAR(50) NOT NULL,
+        LAST_NAME  VARCHAR(50) NOT NULL,
+        PHONE      VARCHAR(20),
+        BIRTHDAY   DATE
+    )

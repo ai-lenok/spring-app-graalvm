@@ -1,0 +1,12 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: {{ .Values.database.name }}
+spec:
+  selector:
+    app: {{ .Values.database.name }}-selector
+  ports:
+    - name: {{ .Values.database.name }}-port
+      protocol: TCP
+      port: {{ .Values.database.port }}
+      targetPort: {{ .Values.database.name }}-tcp

@@ -1,0 +1,18 @@
+kind: Ingress
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: {{ .Values.addressbook.name }}-ingress
+  labels:
+    app: {{ .Values.addressbook.name }}
+spec:
+  rules:
+    - host: {{ .Values.addressbook.ingress.host }}
+      http:
+        paths:
+          - path: {{ .Values.addressbook.ingress.uri }}
+            pathType: {{ .Values.addressbook.ingress.pathType }}
+            backend:
+              service:
+                name: {{ .Values.addressbook.name }}
+                port:
+                  name: {{ .Values.addressbook.name }}-api

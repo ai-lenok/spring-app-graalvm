@@ -1,0 +1,19 @@
+GET http://{{host}}/api/v1/addressbooks
+
+{}
+
+###
+GET http://{{host}}/api/v1/addressbooks?page=0&size=2
+
+{}
+
+###
+POST http://{{host}}/api/v1/addressbook
+Content-Type: application/json
+
+{
+  "firstName": "Ivan",
+  "lastName": "Ivanov",
+  "phone": "+79999999999",
+  "birthday": "2000-01-01"
+}

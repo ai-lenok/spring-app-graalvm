@@ -1,0 +1,19 @@
+FROM registry.access.redhat.com/quarkus/mandrel-22-rhel8:22.3 AS builder
+WORKDIR /build
+COPY src src
+COPY .mvn .mvn
+COPY pom.xml .
+COPY mvnw .
+RUN ./mvnw native:compile -Pnative
+
+FROM registry.access.redhat.com/ubi9-minimal
+USER 1001
+WORKDIR /app
+RUN mkdir /app/config && \
+    chown -R 1001 /app && \
+    chmod -R "g+rwX" /app && \
+    chown -R 1001:root /app
+
+COPY --chown=1001 --from=builder /build/target/addressbook /app/application
+EXPOSE 8080
+CMD "/app/application"

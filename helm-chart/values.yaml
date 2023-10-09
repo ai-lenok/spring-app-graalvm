@@ -1,0 +1,43 @@
+database:
+  name: db
+  image: bitnami/postgresql:15
+  username: addressbook
+  database_name: addressbook_db
+  password: my_pass
+  port: 5432
+  resources:
+    limits:
+      cpu: 500m
+      memory: 512Mi
+    requests:
+      cpu: 500m
+      memory: 256Mi
+
+addressbook:
+  replicas: 1
+  name: addressbook
+  image: dzx912/addressbook-project-native:1
+  port: 8080
+  mountPath: /app/config/
+  resources:
+    limits:
+      cpu: 500m
+      memory: 512Mi
+    requests:
+      cpu: 500m
+      memory: 256Mi
+  livenessProbe:
+    httpGet:
+      path: /actuator/health
+      port: http
+    failureThreshold: 100
+  readinessProbe:
+    httpGet:
+      path: /actuator/health
+      port: http
+  ingress:
+    host: HOST_APP
+    uri: /api/v1
+    pathType: Prefix
+  securityContext:
+    runAsNonRoot: true

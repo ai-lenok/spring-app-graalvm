@@ -1,0 +1,12 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: {{ .Values.addressbook.name }}
+spec:
+  selector:
+    app: {{ .Values.addressbook.name }}-selector
+  ports:
+    - name: {{ .Values.addressbook.name }}-api
+      protocol: TCP
+      port: {{ .Values.addressbook.port }}
+      targetPort: http
