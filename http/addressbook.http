@@ -1,13 +1,14 @@
+### Get a list of all records
 GET http://{{host}}/api/v1/addressbooks
 
 {}
 
-###
+### Get a list of all records limited to pages
 GET http://{{host}}/api/v1/addressbooks?page=0&size=2
 
 {}
 
-###
+### Save new record
 POST http://{{host}}/api/v1/addressbook
 Content-Type: application/json
 
