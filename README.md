@@ -1,69 +1,71 @@
-# Пример использования GraalVM вместе с Spring boot 3
+# Example of using GraalVM with Spring boot 3
 
-## Реквизиты
+Example implementation of an application on GraalVM
+
+## Requirements
 
 - Java 17
 - Docker
-- Helm
+- [Helm](https://helm.sh/ru/docs/intro/install/) (optional)
 
-## Сборка
+## Build native image
 
 ```shell
 docker image build --tag spring-app-graalvm:1 --file Dockerfile.native .
 ```
 
-## Запуск приложения в Kubernetes с помощью Helm
+## Running an Application on Kubernetes Using Helm
 
-### Deploy первой версии приложения
+### Deploy the first version of the application
 
 ```shell
 helm install addressbook helm-chart
 ```
 
-### Обновление приложения
+### Application update
 
 ```shell
 helm upgrade addressbook helm-chart
 ```
 
-### Возврат к предыдущей версии
+### Return to previous version
 
-#### Посмотреть историю установок
+#### View installation history
 
 ```shell
 helm history addressbook
 ```
 
-#### Вернуться к 5-й версии
+#### Return to version 5
 
-Подразумевается, что в истории есть 5-я версия
+It is implied that there is a 5th revision version of the revision
 
 ```shell
 helm rollback addressbook 5
 ```
 
-### Удалить приложение
+### Delete application
 
 ```shell
 helm uninstall addressbook
 ```
 
-### "Холостой" запуск
+### Idle start
 
-Запуск любой команды helm
+Run any helm command
 
-С выводом логов, но без реальных действий
+With log output, but without real actions
 
 ```shell
 helm upgrade addressbook helm-chart --dry-run
 ```
 
-Часто применяется вместе с `--debug`
+Often used in conjunction with `--debug`
 
 ```shell
 helm upgrade addressbook helm-chart --dry-run --debug
 ```
 
-## Проверка работы
+## Checking work
 
-В каталоге [http](http/) лежит пример запросов в нотации IDEA REST Client
+[The file](http/addressbook.http) contains example requests in IDEA REST Client notation
